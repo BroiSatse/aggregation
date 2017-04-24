@@ -15,6 +15,9 @@ defmodule AggregationTest do
 
       defstruct [:number]
 
+      validates :number, presence: true
+
+      pipe Pipes, :validate
       pipe :ensure_small
       pipe :publish_event
 
@@ -41,6 +44,9 @@ defmodule AggregationTest do
     stream = Aggregate.stream aggregate
     with_stream(stream) do
       assert Aggregate.state(aggregate) == %SimpleAggregate{counter: 0, event_counter: 0}
+
+      {:error, result} = Aggregate.command!(aggregate, %SimpleAggregate.Add{})
+      assert result == {:validation_failed, [{:error, :number, :presence, "must be present"}]}
 
       {:ok, _} = Aggregate.command!(aggregate, %SimpleAggregate.Add{number: 5})
       assert Aggregate.state(aggregate) == %SimpleAggregate{counter: 5, event_counter: 1}

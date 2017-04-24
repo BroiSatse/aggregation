@@ -3,6 +3,7 @@ defmodule Aggregation.Command do
     quote do
       use Pipeline
       use Vex.Struct
+      alias Aggregation.Command.Pipes
 
       @before_compile unquote(__MODULE__)
     end
