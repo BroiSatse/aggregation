@@ -34,7 +34,7 @@ defmodule AggregationTest do
       end
     end
 
-    handle_event(aggregate, %Added{number: number}) do
+    def apply(aggregate, %Added{number: number}) do
       %__MODULE__{counter: aggregate.counter + number, event_counter: aggregate.event_counter + 1}
     end
   end
